@@ -113,7 +113,65 @@ FROM PC;
 
 SELECT AVG(speed) AS Avg_Speed
 FROM Laptop
-WHERE price > 1000
+WHERE price > 1000;
+
+
+Задание: 13 (Serge I: 2002-11-02)
+Найдите среднюю скорость ПК, выпущенных производителем A.
+
+SELECT AVG(speed) AS Avg_Speed 
+FROM PC JOIN 
+Product ON PC.model = Product.model
+WHERE maker = 'A';
+
+Задание: 14 (Serge I: 2002-11-05)
+Найдите класс, имя и страну для кораблей из таблицы Ships, имеющих не менее 10 орудий.
+
+SELECT Classes.class, name, country 
+FROM Ships JOIN
+Classes ON Ships.class = Classes.class
+WHERE numGuns >= 10;
+
+Задание: 15 (Serge I: 2003-02-03)
+Найдите размеры жестких дисков, совпадающих у двух и более PC. Вывести: HD
+
+SELECT hd
+FROM PC 
+GROUP BY hd
+HAVING (COUNT(hd) >= 2);
+
+Задание: 16 (Serge I: 2003-02-03)
+Найдите пары моделей PC, имеющих одинаковые скорость и RAM. В результате каждая пара указывается только один раз, т.е. (i,j), но не (j,i), 
+Порядок вывода: модель с большим номером, модель с меньшим номером, скорость и RAM.
+
+SELECT DISTINCT A.model AS model_1, B.model AS model_2, A.speed, A.ram
+FROM PC AS A, PC B
+WHERE A.speed = B.speed AND
+A.ram = B.ram AND 
+ A.model > B.model;
+ 
+Задание: 17 (Serge I: 2003-02-03)
+Найдите модели ПК-блокнотов, скорость которых меньше скорости каждого из ПК.
+Вывести: type, model, speed
+
+SELECT DISTINCT Product.type, Laptop.model, Laptop.speed
+FROM Laptop, Product
+WHERE Laptop.speed < ALL (SELECT PC.speed 
+ FROM PC)
+AND Product.type = 'Laptop';
+
+Задание: 18 (Serge I: 2003-02-03)
+Найдите производителей самых дешевых цветных принтеров. Вывести: maker, price
+
+SELECT DISTINCT Product.maker, Printer.price
+FROM Product
+JOIN Printer on Product.model = Printer.model
+WHERE Printer.color = 'y' and Printer.price = (select MIN(price) from Printer where color = 'y')
+
+
+
+
+
 
 
 
